@@ -1,0 +1,8 @@
+{
+  "appId": "br.com.primeiromilhao.dudi",
+  "appName": "Primeiro Milhão",
+  "webDir": "www",
+  "backgroundColor": "#46297f",
+  "android": { "allowMixedContent": false },
+  "server": { "androidScheme": "https" }
+}
