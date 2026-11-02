@@ -1,0 +1,43 @@
+name: Organizar arquivos
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/organizar.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  organizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Colocar cada arquivo na pasta certa
+        run: |
+          set -eu
+          mkdir -p app/icons app/fonts apps-script assets scripts site
+          # O index.html do app é o maior dos dois
+          if [ "$(stat -c%s index.html)" -gt 50000 ]; then
+            git mv index.html app/index.html
+            git mv "index (1).html" site/index.html
+          else
+            git mv "index (1).html" app/index.html
+            git mv index.html site/index.html
+          fi
+          git mv manifest.webmanifest app/manifest.webmanifest
+          git mv sw.js app/sw.js
+          git mv icon-192.png icon-512.png maskable-512.png app/icons/
+          git mv OFL.txt montserrat-latin.woff2 app/fonts/
+          git mv Codigo.gs apps-script/Codigo.gs
+          git mv icon-background.png icon-foreground.png icon-only.png splash-dark.png splash.png assets/
+          git mv build-web.js scripts/build-web.js
+          git mv download .gitignore
+          git mv "download (2)" .nojekyll
+          git rm -q android.yml site.yml
+      - name: Salvar
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -q -m "Organiza os arquivos nas pastas" -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" -m "Claude-Session: https://claude.ai/code/session_018eMbsMf3HKMoDC9LBZn3dF"
+          git push
